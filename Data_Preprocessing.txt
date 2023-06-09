@@ -1,0 +1,48 @@
+import numpy as np
+import pandas as pd
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
+# dataset=pd.read_csv("my_data.csv")
+# print(dataset)
+
+dataset = pd.read_csv("my_data.csv")
+# x = dataset[['Country', 'Age', 'salary']]
+# print(x)
+
+# x = dataset[['Country', 'Age', 'salary']].values
+# print(x)
+
+x = dataset[['Country', 'Age', 'salary']].values
+y=dataset[['Purchased']].values
+
+imputer=SimpleImputer(missing_values=np.nan,strategy="mean")
+x[:,1:3]=imputer.fit_transform(x[:,1:3])
+
+#use fit and transform seperately or together fit_transform
+# imputer=imputer.fit(x[:,1:3])
+# x[:,1:3]=imputer.transform(x[:,1:3])
+
+
+
+encode_y_col1=LabelEncoder()
+y=encode_y_col1.fit_transform(y)
+
+
+encode_x=OneHotEncoder()
+x=encode_x.fit_transform(dataset.Country.values.reshape(-1,1)).toarray()
+
+
+train_x,test_x,train_y,test_y=train_test_split(x,y,test_size=0.2,random_state=0)
+
+
+scale=StandardScaler()
+x_train=scale.fit_transform(train_x)
+x_test=scale.transform(test_x)
+
+
+
+print(x_test)
